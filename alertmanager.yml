@@ -1,0 +1,11 @@
+route:
+  receiver: default
+  group_by: ["alertname"]   # one notification per alert type, not per series
+  group_wait: 10s           # wait briefly to batch alerts that fire together
+  group_interval: 1m        # min gap before notifying about changes to the same group
+  repeat_interval: 1h       # re-notify if still firing after this long
+
+receivers:
+  # No delivery configured: alerts show in the Alertmanager UI (:9093) only.
+  # In a real setup you'd add e.g. slack_configs (api_url + channel) here.
+  - name: default

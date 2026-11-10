@@ -1,0 +1,9 @@
+apiVersion: 1
+
+providers:
+  - name: default
+    type: file
+    allowUiUpdates: false   # the JSON file is the source of truth
+    updateIntervalSeconds: 10 # re-read the folder every 10s, so JSON edits show up without a restart
+    options:
+      path: /etc/grafana/provisioning/dashboards/json

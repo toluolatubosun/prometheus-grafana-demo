@@ -1,0 +1,12 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    uid: prometheus          # fixed id, so dashboard JSON can reference it
+    type: prometheus
+    access: proxy            # Grafana's server makes the queries, not your browser
+    url: http://prometheus:9090
+    isDefault: true
+    editable: false
+    jsonData:
+      timeInterval: 5s       # match Prometheus's scrape_interval

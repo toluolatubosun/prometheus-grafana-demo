@@ -1,0 +1,25 @@
+groups:
+  - name: job-queue-api
+    rules:
+      # Fires during a k6 run: jobs arrive faster than the 4 workers can finish them.
+      # HTTP metrics look healthy at the same time, so only this alert catches it.
+      - alert: QueueBackingUp
+        expr: job_queue_depth > 200
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Job queue is backing up"
+          description: "{{ $value }} jobs waiting in queue {{ $labels.queue }} for over 1 minute."
+
+      # Normal level is ~3% (simulated). Fires only if server errors spike.
+      - alert: HighServerErrorRate
+        expr: |
+          sum(rate(http_requests_total{status_code=~"5.."}[1m]))
+            / sum(rate(http_requests_total[1m])) > 0.05
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Server error rate above 5%"
+          description: "{{ $value | humanizePercentage }} of requests are failing with 5xx."
